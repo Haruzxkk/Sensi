@@ -25,24 +25,20 @@
         }
 
         .container {
-            max-width: 600px;
-            background: rgba(255, 255, 255, 0.1);
+            max-width: 400px;
+            background: rgba(255, 255, 255, 0.2);
             border-radius: 10px;
             padding: 20px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(15px);
+            backdrop-filter: blur(10px);
             transition: transform 0.3s;
-        }
-
-        .container:hover {
-            transform: scale(1.05);
+            text-align: center;
         }
 
         h1 {
-            text-align: center;
             margin-bottom: 20px;
-            font-size: 2.5rem;
-            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+            font-size: 2rem;
+            color: #ffffff;
         }
 
         button {
@@ -54,34 +50,12 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            font-size: 1.5rem;
-            position: relative;
-            overflow: hidden;
-            transition: all 0.3s;
-        }
-
-        button::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 50%;
-            width: 300%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.3);
-            transform: translateX(-50%) translateY(100%);
-            transition: all 0.5s;
-            border-radius: 5px;
-        }
-
-        button:hover::before {
-            transform: translateX(-50%) translateY(0);
+            font-size: 1.2rem;
+            transition: background-color 0.3s;
         }
 
         button:hover {
             background-color: #2575fc;
-            color: #fff;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
-            transform: translateY(-2px);
         }
 
         .resultado {
@@ -89,23 +63,11 @@
             padding: 15px;
             border-radius: 5px;
             background: rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+            font-size: 1.2rem;
             border: 1px solid #fff;
-            transition: 0.3s;
         }
 
-        .resultado h2 {
-            margin-top: 0;
-        }
-
-        @media (max-width: 600px) {
-            h1 {
-                font-size: 2rem;
-            }
-
-            button {
-                font-size: 1.2rem;
-            }
-        }
     </style>
 </head>
 <body>
@@ -119,10 +81,10 @@
     <script>
         function gerarSensibilidade() {
             const dpi = Math.floor(Math.random() * (1001 - 400)) + 400; // Gera DPI entre 400 e 1000
-            const pontoVermelho = (Math.random() * 200).toFixed(2); // Sensi Ponto Vermelho entre 0 e 200
-            const mira2x = (Math.random() * 200).toFixed(2); // Sensi Mira 2x entre 0 e 200
-            const mira4x = (Math.random() * 200).toFixed(2); // Sensi Mira 4x entre 0 e 200
-            const miraAwm = (Math.random() * 200).toFixed(2); // Sensi Mira AWM entre 0 e 200
+            const pontoVermelho = Math.floor(Math.random() * 201); // Sensi Ponto Vermelho entre 0 e 200
+            const mira2x = Math.floor(Math.random() * 201); // Sensi Mira 2x entre 0 e 200
+            const mira4x = Math.floor(Math.random() * 201); // Sensi Mira 4x entre 0 e 200
+            const miraAwm = Math.floor(Math.random() * 201); // Sensi Mira AWM entre 0 e 200
 
             const resultado = `
                 <h2>Configurações Geradas:</h2>
