@@ -211,6 +211,7 @@
                 slice.innerText = item;
                 const rotation = (360 / items.length) * index;
                 slice.style.transform = `rotate(${rotation}deg)`;
+                slice.style.height = `calc(100% / ${items.length})`; // Garante que cada item ocupe espaço igual
                 wheel.appendChild(slice);
             });
         }
@@ -256,10 +257,11 @@
                 const selectedItem = items[selectedSlice];
 
                 resultDisplay.textContent = `Você ganhou: ${selectedItem}`;
-                historyDisplay.innerHTML += `<div>${selectedItem}</div>`; // Adiciona ao histórico
-                spinCounts[selectedItem]++; // Incrementa contagem de vitórias
-                updateStats();
-                resetButton.style.display = 'inline'; spinning = false;
+                historyDisplay.innerHTML += `<div>${selectedItem}</div>`;
+                spinCounts[selectedItem]++; // Incrementa a contagem do item selecionado
+                updateStats(); // Atualiza as estatísticas
+                resetButton.style.display = 'inline-block'; // Mostra o botão de girar novamente
+                spinning = false;
             }, 4000);
         });
 
