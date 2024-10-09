@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de Sensibilidade Free Fire</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            background: linear-gradient(45deg, #6a11cb, #2575fc);
+            animation: gradient 5s ease infinite;
+        }
+
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            max-width: 600px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(15px);
+            transition: transform 0.3s;
+        }
+
+        .container:hover {
+            transform: scale(1.05);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            margin-top: 20px;
+            background-color: #6a11cb;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.5rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 300%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateX(-50%) translateY(100%);
+            transition: all 0.5s;
+            border-radius: 5px;
+        }
+
+        button:hover::before {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        button:hover {
+            background-color: #2575fc;
+            color: #fff;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .resultado {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid #fff;
+            transition: 0.3s;
+        }
+
+        .resultado h2 {
+            margin-top: 0;
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            button {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Gerador de Sensibilidade Free Fire</h1>
+        <button type="button" onclick="gerarSensibilidade()">Gerar Sensibilidade Aleatória</button>
+        
+        <div id="resultado" class="resultado"></div>
+    </div>
+    
+    <script>
+        function gerarSensibilidade() {
+            const dpi = Math.floor(Math.random() * (1001 - 400)) + 400; // Gera DPI entre 400 e 1000
+            const pontoVermelho = (Math.random() * 200).toFixed(2); // Sensi Ponto Vermelho entre 0 e 200
+            const mira2x = (Math.random() * 200).toFixed(2); // Sensi Mira 2x entre 0 e 200
+            const mira4x = (Math.random() * 200).toFixed(2); // Sensi Mira 4x entre 0 e 200
+            const miraAwm = (Math.random() * 200).toFixed(2); // Sensi Mira AWM entre 0 e 200
+
+            const resultado = `
+                <h2>Configurações Geradas:</h2>
+                <p><strong>DPI:</strong> ${dpi}</p>
+                <p><strong>Ponto Vermelho:</strong> ${pontoVermelho}</p>
+                <p><strong>Mira 2x:</strong> ${mira2x}</p>
+                <p><strong>Mira 4x:</strong> ${mira4x}</p>
+                <p><strong>Mira AWM:</strong> ${miraAwm}</p>
+            `;
+
+            document.getElementById('resultado').innerHTML = resultado;
+        }
+    </script>
+</body>
+</html>
