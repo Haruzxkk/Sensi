@@ -51,11 +51,12 @@
             border-radius: 5px;
             cursor: pointer;
             font-size: 1.2rem;
-            transition: background-color 0.3s;
+            transition: background-color 0.3s, transform 0.3s;
         }
 
         button:hover {
             background-color: #2575fc;
+            transform: scale(1.05);
         }
 
         .resultado {
@@ -66,6 +67,18 @@
             color: #ffffff;
             font-size: 1.2rem;
             border: 1px solid #fff;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+
+        .visible {
+            opacity: 1;
+        }
+
+        .icon {
+            width: 20px;
+            vertical-align: middle;
+            margin-right: 8px;
         }
 
     </style>
@@ -88,14 +101,21 @@
 
             const resultado = `
                 <h2>Configurações Geradas:</h2>
-                <p><strong>DPI:</strong> ${dpi}</p>
-                <p><strong>Ponto Vermelho:</strong> ${pontoVermelho}</p>
-                <p><strong>Mira 2x:</strong> ${mira2x}</p>
-                <p><strong>Mira 4x:</strong> ${mira4x}</p>
-                <p><strong>Mira AWM:</strong> ${miraAwm}</p>
+                <p><img src="https://img.icons8.com/ios-filled/50/ffffff/dpi.png" class="icon"/><strong>DPI:</strong> ${dpi}</p>
+                <p><img src="https://img.icons8.com/ios-filled/50/ffffff/crosshair.png" class="icon"/><strong>Ponto Vermelho:</strong> ${pontoVermelho}</p>
+                <p><img src="https://img.icons8.com/ios-filled/50/ffffff/crosshair.png" class="icon"/><strong>Mira 2x:</strong> ${mira2x}</p>
+                <p><img src="https://img.icons8.com/ios-filled/50/ffffff/crosshair.png" class="icon"/><strong>Mira 4x:</strong> ${mira4x}</p>
+                <p><img src="https://img.icons8.com/ios-filled/50/ffffff/crosshair.png" class="icon"/><strong>Mira AWM:</strong> ${miraAwm}</p>
             `;
 
-            document.getElementById('resultado').innerHTML = resultado;
+            const resultadoDiv = document.getElementById('resultado');
+            resultadoDiv.innerHTML = resultado;
+            resultadoDiv.classList.add('visible');
+
+            // Mudar a cor aleatoriamente
+            const randomColor = `#${Math.floor(Math.random()*16777215).toString(16)}`;
+            resultadoDiv.style.color = randomColor;
+            document.querySelector('button').style.backgroundColor = randomColor;
         }
     </script>
 </body>
