@@ -14,7 +14,7 @@ body {
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     text-align: center;
-    width: 300px;
+    width: 400px;
 }
 
 h1 {
@@ -29,7 +29,7 @@ h1 {
 }
 
 #item-input {
-    width: 150px;
+    width: 200px;
     padding: 5px;
     margin-right: 10px;
     border-radius: 4px;
@@ -73,4 +73,39 @@ ul li button {
 h2 {
     margin-top: 20px;
     font-size: 18px;
+}
+
+.roulette-container {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    margin: 20px auto;
+    border: 5px solid #ccc;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.roulette {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    transform: rotate(0deg);
+    transition: transform 5s ease-out;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.roulette-item {
+    width: 50px;
+    height: 50px;
+    margin: 5px;
+    background-color: #ffcc00;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    font-size: 14px;
 }
