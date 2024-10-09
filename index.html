@@ -12,7 +12,7 @@
             align-items: center;
             flex-direction: column;
             height: 100vh;
-            background: linear-gradient(to bottom right, #e1f5fe, #b3e5fc);
+            background: #f0f0f0;
             font-family: 'Arial', sans-serif;
             margin: 0;
             padding: 0;
@@ -29,7 +29,7 @@
         }
 
         h1 {
-            color: #00796b;
+            color: #333;
             font-size: 2.5rem;
             margin-bottom: 15px;
         }
@@ -44,7 +44,7 @@
             width: 300px;
             height: 300px;
             border-radius: 50%;
-            border: 10px solid #ffcc00;
+            border: 10px solid #333;
             position: relative;
             overflow: hidden;
             transition: transform 4s ease-out;
@@ -56,8 +56,8 @@
             position: absolute;
             width: 50%;
             height: 50%;
-            background-color: #ffcc00;
-            border: 1px solid #fff;
+            background-color: #fff;
+            border: 1px solid #ccc;
             transform-origin: 100% 100%;
             display: flex;
             justify-content: center;
@@ -66,6 +66,17 @@
             color: #333;
             text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.8);
             border-radius: 10px;
+        }
+
+        /* Seta da roleta */
+        .arrow {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 10px solid transparent;
+            border-bottom: 10px solid #333;
+            z-index: 10;
         }
 
         button {
@@ -113,7 +124,7 @@
         }
 
         #itemInput {
-            width: 80%;
+            width: 70%;
             padding: 10px;
             border-radius: 5px;
             border: 1px solid #ccc;
@@ -122,6 +133,20 @@
         }
 
         #itemInput:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+
+        #removeItemInput {
+            width: 70%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            margin-top: 10px;
+            transition: border-color 0.3s;
+        }
+
+        #removeItemInput:focus {
             border-color: #007bff;
             outline: none;
         }
@@ -139,7 +164,15 @@
         <p>Adicione seus itens e gire a roleta!</p>
         <input type="text" id="itemInput" placeholder="Digite um item" />
         <button id="addItemButton">Adicionar Item</button>
-        <div class="wheel" id="wheel"></div>
+
+        <h3>Remover um Item</h3>
+        <input type="text" id="removeItemInput" placeholder="Digite o item para remover" />
+        <button id="removeItemButton">Remover Item</button>
+
+        <div class="wheel" id="wheel">
+            <div class="arrow"></div>
+        </div>
+
         <button id="spinButton">Girar a Roleta</button>
         <button id="resetButton" style="display:none;">Girar Novamente</button>
         <h2 id="result"></h2>
@@ -160,6 +193,8 @@
         const statsDisplay = document.getElementById('stats');
         const itemInput = document.getElementById('itemInput');
         const addItemButton = document.getElementById('addItemButton');
+        const removeItemInput = document.getElementById('removeItemInput');
+        const removeItemButton = document.getElementById('removeItemButton');
         const spinSound = document.getElementById('spinSound');
         
         let items = [];
@@ -168,7 +203,7 @@
         let spinning = false;
 
         function updateWheel() {
-            wheel.innerHTML = '';
+            wheel.innerHTML = '<div class="arrow"></div>'; // Adiciona a seta novamente
             items.forEach((item, index) => {
                 const slice = document.createElement('div');
                 slice.className = 'slice';
@@ -192,6 +227,20 @@
             }
         });
 
+        removeItemButton.addEventListener('click', () => {
+            const itemToRemove = removeItemInput.value.trim();
+            const index = items.indexOf(itemToRemove);
+            if (index !== -1) {
+                items.splice(index, 1); // Remove o item
+                delete spinCounts[itemToRemove]; // Remove contagem de vitórias
+                removeItemInput.value = '';
+                updateWheel();
+                alert(`Item "${itemToRemove}" removido com sucesso!`);
+            } else {
+                alert('Item não encontrado!');
+            }
+        });
+
         spinButton.addEventListener('click', () => {
             if (spinning || items.length === 0) return;
             spinning = true;
@@ -210,22 +259,19 @@
                 historyDisplay.innerHTML += `<div>${selectedItem}</div>`; // Adiciona ao histórico
                 spinCounts[selectedItem]++; // Incrementa contagem de vitórias
                 updateStats();
-                resetButton.style.display = 'inline';
-                spinButton.style.display = 'none';
-                spinning = false;
+                resetButton.style.display = 'inline'; spinning = false;
             }, 4000);
         });
 
         resetButton.addEventListener('click', () => {
-            wheel.style.transition = 'none';
-            wheel.style.transform = `rotate(0deg)`;
+            wheel.style.transition = 'none'; // Remove a transição para girar de volta
+            wheel.style.transform = 'rotate(0deg)';
             resultDisplay.textContent = '';
             resetButton.style.display = 'none';
-            spinButton.style.display = 'inline';
         });
 
         function updateStats() {
-            statsDisplay.innerHTML = '';
+            statsDisplay.innerHTML = ''; // Limpa as estatísticas
             for (const item in spinCounts) {
                 statsDisplay.innerHTML += `<div>${item}: ${spinCounts[item]} vez(es)</div>`;
             }
