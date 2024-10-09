@@ -1,122 +1,236 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gerador de Sensibilidade Free Fire</title>
+    <title>Roleta de Sorteio</title>
     <style>
         body {
-            font-family: 'Arial', sans-serif;
-            margin: 0;
-            padding: 0;
-            height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            overflow: hidden;
-            background: linear-gradient(45deg, #6a11cb, #2575fc);
-            animation: gradient 5s ease infinite;
-        }
-
-        @keyframes gradient {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+            flex-direction: column;
+            height: 100vh;
+            background: linear-gradient(to bottom right, #e1f5fe, #b3e5fc);
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
         }
 
         .container {
-            max-width: 400px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(10px);
-            transition: transform 0.3s;
             text-align: center;
+            background-color: #fff;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            padding: 40px;
+            width: 90%;
+            max-width: 600px;
         }
 
         h1 {
+            color: #00796b;
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+
+        p {
+            color: #555;
+            font-size: 1.2rem;
             margin-bottom: 20px;
-            font-size: 2rem;
-            color: #ffffff;
+        }
+
+        .wheel {
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            border: 10px solid #ffcc00;
+            position: relative;
+            overflow: hidden;
+            transition: transform 4s ease-out;
+            margin: 20px auto;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .slice {
+            position: absolute;
+            width: 50%;
+            height: 50%;
+            background-color: #ffcc00;
+            border: 1px solid #fff;
+            transform-origin: 100% 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            color: #333;
+            text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
         }
 
         button {
-            width: 100%;
-            padding: 15px;
             margin-top: 20px;
-            background-color: #6a11cb;
-            color: #fff;
+            padding: 12px 25px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
             border: none;
             border-radius: 5px;
-            cursor: pointer;
-            font-size: 1.2rem;
-            transition: background-color 0.3s, transform 0.3s;
+            transition: background-color 0.3s, transform 0.2s;
         }
 
         button:hover {
-            background-color: #2575fc;
+            background-color: #0056b3;
             transform: scale(1.05);
         }
 
-        .resultado {
+        h2 {
             margin-top: 20px;
-            padding: 15px;
+            font-size: 1.5rem;
+            color: #333;
+        }
+
+        #resetButton {
+            background-color: #28a745;
+        }
+
+        #resetButton:hover {
+            background-color: #218838;
+        }
+
+        #history,
+        #stats {
+            margin-top: 20px;
+            text-align: left;
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid #ccc;
+            padding: 10px;
             border-radius: 5px;
-            background: rgba(255, 255, 255, 0.2);
-            color: #ffffff;
-            font-size: 1.2rem;
-            border: 1px solid #fff;
-            opacity: 0;
-            transition: opacity 0.5s;
+            background-color: #f9f9f9;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
 
-        .visible {
-            opacity: 1;
+        #itemInput {
+            width: 80%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            margin-top: 10px;
+            transition: border-color 0.3s;
         }
 
-        .icon {
-            width: 20px;
-            vertical-align: middle;
-            margin-right: 8px;
+        #itemInput:focus {
+            border-color: #007bff;
+            outline: none;
         }
 
+        h3 {
+            margin-top: 20px;
+            color: #00796b;
+        }
     </style>
 </head>
+
 <body>
     <div class="container">
-        <h1>Gerador de Sensibilidade Free Fire</h1>
-        <button type="button" onclick="gerarSensibilidade()">Gerar Sensibilidade Aleatória</button>
-        
-        <div id="resultado" class="resultado"></div>
+        <h1>Roleta de Sorteio</h1>
+        <p>Adicione seus itens e gire a roleta!</p>
+        <input type="text" id="itemInput" placeholder="Digite um item" />
+        <button id="addItemButton">Adicionar Item</button>
+        <div class="wheel" id="wheel"></div>
+        <button id="spinButton">Girar a Roleta</button>
+        <button id="resetButton" style="display:none;">Girar Novamente</button>
+        <h2 id="result"></h2>
+        <h3>Histórico de Resultados:</h3>
+        <div id="history"></div>
+        <h3>Estatísticas de Ganhos:</h3>
+        <div id="stats"></div>
     </div>
-    
+
+    <audio id="spinSound" src="https://www.soundjay.com/button/sounds/button-16.mp3"></audio>
+
     <script>
-        function gerarSensibilidade() {
-            const dpi = Math.floor(Math.random() * (1001 - 400)) + 400; // Gera DPI entre 400 e 1000
-            const pontoVermelho = Math.floor(Math.random() * 201); // Sensi Ponto Vermelho entre 0 e 200
-            const mira2x = Math.floor(Math.random() * 201); // Sensi Mira 2x entre 0 e 200
-            const mira4x = Math.floor(Math.random() * 201); // Sensi Mira 4x entre 0 e 200
-            const miraAwm = Math.floor(Math.random() * 201); // Sensi Mira AWM entre 0 e 200
+        const spinButton = document.getElementById('spinButton');
+        const resetButton = document.getElementById('resetButton');
+        const wheel = document.getElementById('wheel');
+        const resultDisplay = document.getElementById('result');
+        const historyDisplay = document.getElementById('history');
+        const statsDisplay = document.getElementById('stats');
+        const itemInput = document.getElementById('itemInput');
+        const addItemButton = document.getElementById('addItemButton');
+        const spinSound = document.getElementById('spinSound');
+        
+        let items = [];
+        let spinHistory = [];
+        let spinCounts = {};
+        let spinning = false;
 
-            const resultado = `
-                <h2>Configurações Geradas:</h2>
-                <p><img src="https://img.icons8.com/ios-filled/50/ffffff/dpi.png" class="icon"/><strong>DPI:</strong> ${dpi}</p>
-                <p><img src="https://img.icons8.com/ios-filled/50/ffffff/crosshair.png" class="icon"/><strong>Ponto Vermelho:</strong> ${pontoVermelho}</p>
-                <p><img src="https://img.icons8.com/ios-filled/50/ffffff/crosshair.png" class="icon"/><strong>Mira 2x:</strong> ${mira2x}</p>
-                <p><img src="https://img.icons8.com/ios-filled/50/ffffff/crosshair.png" class="icon"/><strong>Mira 4x:</strong> ${mira4x}</p>
-                <p><img src="https://img.icons8.com/ios-filled/50/ffffff/crosshair.png" class="icon"/><strong>Mira AWM:</strong> ${miraAwm}</p>
-            `;
+        function updateWheel() {
+            wheel.innerHTML = '';
+            items.forEach((item, index) => {
+                const slice = document.createElement('div');
+                slice.className = 'slice';
+                slice.dataset.item = item;
+                slice.innerText = item;
+                const rotation = (360 / items.length) * index;
+                slice.style.transform = `rotate(${rotation}deg)`;
+                wheel.appendChild(slice);
+            });
+        }
 
-            const resultadoDiv = document.getElementById('resultado');
-            resultadoDiv.innerHTML = resultado;
-            resultadoDiv.classList.add('visible');
+        addItemButton.addEventListener('click', () => {
+            const newItem = itemInput.value.trim();
+            if (newItem && !items.includes(newItem)) {
+                items.push(newItem);
+                spinCounts[newItem] = 0; // Inicializa contagem de vitórias
+                itemInput.value = '';
+                updateWheel();
+            } else {
+                alert('Item inválido ou já existe!');
+            }
+        });
 
-            // Mudar a cor aleatoriamente
-            const randomColor = `#${Math.floor(Math.random()*16777215).toString(16)}`;
-            resultadoDiv.style.color = randomColor;
-            document.querySelector('button').style.backgroundColor = randomColor;
+        spinButton.addEventListener('click', () => {
+            if (spinning || items.length === 0) return;
+            spinning = true;
+            const randomDegree = Math.floor(Math.random() * 360) + 720; // Gira pelo menos 2 voltas
+            wheel.style.transition = 'transform 4s ease-out';
+            wheel.style.transform = `rotate(${randomDegree}deg)`;
+            spinSound.play();
+
+            setTimeout(() => {
+                const actualDegree = randomDegree % 360;
+                const sliceAngle = 360 / items.length; // Número de fatias
+                const selectedSlice = Math.floor((actualDegree + (sliceAngle / 2)) / sliceAngle);
+                const selectedItem = items[selectedSlice];
+
+                resultDisplay.textContent = `Você ganhou: ${selectedItem}`;
+                historyDisplay.innerHTML += `<div>${selectedItem}</div>`; // Adiciona ao histórico
+                spinCounts[selectedItem]++; // Incrementa contagem de vitórias
+                updateStats();
+                resetButton.style.display = 'inline';
+                spinButton.style.display = 'none';
+                spinning = false;
+            }, 4000);
+        });
+
+        resetButton.addEventListener('click', () => {
+            wheel.style.transition = 'none';
+            wheel.style.transform = `rotate(0deg)`;
+            resultDisplay.textContent = '';
+            resetButton.style.display = 'none';
+            spinButton.style.display = 'inline';
+        });
+
+        function updateStats() {
+            statsDisplay.innerHTML = '';
+            for (const item in spinCounts) {
+                statsDisplay.innerHTML += `<div>${item}: ${spinCounts[item]} vez(es)</div>`;
+            }
         }
     </script>
 </body>
+
 </html>
