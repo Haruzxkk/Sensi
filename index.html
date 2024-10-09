@@ -1,269 +1,76 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
-
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Roleta de Sorteio</title>
-    <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            height: 100vh;
-            background: #f0f0f0;
-            font-family: 'Arial', sans-serif;
-            margin: 0;
-            padding: 0;
-        }
-
-        .container {
-            text-align: center;
-            background-color: #fff;
-            border-radius: 20px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-            padding: 40px;
-            width: 90%;
-            max-width: 600px;
-        }
-
-        h1 {
-            color: #333;
-            font-size: 2.5rem;
-            margin-bottom: 15px;
-        }
-
-        p {
-            color: #555;
-            font-size: 1.2rem;
-            margin-bottom: 20px;
-        }
-
-        .wheel {
-            width: 300px;
-            height: 300px;
-            border-radius: 50%;
-            border: 10px solid #333;
-            position: relative;
-            overflow: hidden;
-            transition: transform 4s ease-out;
-            margin: 20px auto;
-        }
-
-        .slice {
-            position: absolute;
-            width: 50%;
-            height: 50%;
-            background-color: #fff;
-            border: 1px solid #333;
-            transform-origin: 100% 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-weight: bold;
-            color: #333;
-            text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.8);
-        }
-
-        /* Seta da roleta */
-        .arrow {
-            position: absolute;
-            top: -20px;
-            left: 50%;
-            transform: translateX(-50%);
-            border: 10px solid transparent;
-            border-bottom: 10px solid #333;
-            z-index: 10;
-        }
-
-        button {
-            margin-top: 20px;
-            padding: 12px 25px;
-            font-size: 1.1rem;
-            cursor: pointer;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            transition: background-color 0.3s, transform 0.2s;
-        }
-
-        button:hover {
-            background-color: #0056b3;
-            transform: scale(1.05);
-        }
-
-        h2 {
-            margin-top: 20px;
-            font-size: 1.5rem;
-            color: #333;
-        }
-
-        #resetButton {
-            background-color: #28a745;
-        }
-
-        #resetButton:hover {
-            background-color: #218838;
-        }
-
-        #history,
-        #stats {
-            margin-top: 20px;
-            text-align: left;
-            max-height: 200px;
-            overflow-y: auto;
-            border: 1px solid #ccc;
-            padding: 10px;
-            border-radius: 5px;
-            background-color: #f9f9f9;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        #itemInput,
-        #removeItemInput {
-            width: 70%;
-            padding: 10px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-            margin-top: 10px;
-            transition: border-color 0.3s;
-        }
-
-        #itemInput:focus,
-        #removeItemInput:focus {
-            border-color: #007bff;
-            outline: none;
-        }
-
-        h3 {
-            margin-top: 20px;
-            color: #00796b;
-        }
-    </style>
+    <title>Roleta</title>
+    <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
     <div class="container">
-        <h1>Roleta de Sorteio</h1>
-        <p>Adicione seus itens e gire a roleta!</p>
-        <input type="text" id="itemInput" placeholder="Digite um item" />
-        <button id="addItemButton">Adicionar Item</button>
+        <h1>Roleta de Itens</h1>
 
-        <h3>Remover um Item</h3>
-        <input type="text" id="removeItemInput" placeholder="Digite o item para remover" />
-        <button id="removeItemButton">Remover Item</button>
-
-        <div class="wheel" id="wheel">
-            <div class="arrow"></div>
+        <div class="add-item">
+            <input type="text" id="item-input" placeholder="Adicionar item">
+            <button onclick="addItem()">Adicionar</button>
         </div>
 
-        <button id="spinButton">Girar a Roleta</button>
-        <button id="resetButton" style="display:none;">Girar Novamente</button>
+        <ul id="item-list">
+            <!-- Lista de itens será inserida aqui -->
+        </ul>
+
+        <button class="spin-btn" onclick="spinRoulette()">Girar</button>
+
         <h2 id="result"></h2>
-        <h3>Histórico de Resultados:</h3>
-        <div id="history"></div>
-        <h3>Estatísticas de Ganhos:</h3>
-        <div id="stats"></div>
     </div>
 
     <script>
-        const spinButton = document.getElementById('spinButton');
-        const resetButton = document.getElementById('resetButton');
-        const wheel = document.getElementById('wheel');
-        const resultDisplay = document.getElementById('result');
-        const historyDisplay = document.getElementById('history');
-        const statsDisplay = document.getElementById('stats');
-        const itemInput = document.getElementById('itemInput');
-        const addItemButton = document.getElementById('addItemButton');
-        const removeItemInput = document.getElementById('removeItemInput');
-        const removeItemButton = document.getElementById('removeItemButton');
-
         let items = [];
-        let spinHistory = [];
-        let spinCounts = {};
-        let spinning = false;
 
-        function updateWheel() {
-            wheel.innerHTML = '<div class="arrow"></div>'; // Adiciona a seta novamente
+        function addItem() {
+            const itemInput = document.getElementById('item-input');
+            const item = itemInput.value.trim();
+
+            if (item !== '') {
+                items.push(item);
+                updateItemList();
+                itemInput.value = ''; // Limpa o campo de texto
+            }
+        }
+
+        function removeItem(index) {
+            items.splice(index, 1); // Remove o item da lista
+            updateItemList();
+        }
+
+        function updateItemList() {
+            const itemList = document.getElementById('item-list');
+            itemList.innerHTML = ''; // Limpa a lista antes de atualizar
+
             items.forEach((item, index) => {
-                const slice = document.createElement('div');
-                slice.className = 'slice';
-                slice.dataset.item = item;
-                slice.innerText = item;
-                const rotation = (360 / items.length) * index;
-                slice.style.transform = `rotate(${rotation}deg)`;
-                slice.style.height = `calc(100% / ${items.length})`; // Garante que cada item ocupe espaço igual
-                wheel.appendChild(slice);
+                const listItem = document.createElement('li');
+                listItem.textContent = item;
+
+                const removeButton = document.createElement('button');
+                removeButton.textContent = 'Remover';
+                removeButton.onclick = function() {
+                    removeItem(index);
+                };
+
+                listItem.appendChild(removeButton);
+                itemList.appendChild(listItem);
             });
         }
 
-        addItemButton.addEventListener('click', () => {
-            const newItem = itemInput.value.trim();
-            if (newItem && !items.includes(newItem)) {
-                items.push(newItem);
-                spinCounts[newItem] = 0; // Inicializa contagem de vitórias
-                itemInput.value = '';
-                updateWheel();
+        function spinRoulette() {
+            if (items.length === 0) {
+                document.getElementById('result').textContent = 'Nenhum item na roleta!';
             } else {
-                alert('Item inválido ou já existe!');
-            }
-        });
-
-        removeItemButton.addEventListener('click', () => {
-            const itemToRemove = removeItemInput.value.trim();
-            const index = items.indexOf(itemToRemove);
-            if (index !== -1) {
-                items.splice(index, 1); // Remove o item
-                delete spinCounts[itemToRemove]; // Remove contagem de vitórias
-                removeItemInput.value = '';
-                updateWheel();
-                alert(`Item "${itemToRemove}" removido com sucesso!`);
-            } else {
-                alert('Item não encontrado!');
-            }
-        });
-
-        spinButton.addEventListener('click', () => {
-            if (spinning || items.length === 0) return;
-            spinning = true;
-            const randomDegree = Math.floor(Math.random() * 360) + 720; // Gira pelo menos 2 voltas
-            wheel.style.transition = 'transform 4s ease-out';
-            wheel.style.transform = `rotate(${randomDegree}deg)`;
-
-            setTimeout(() => {
-                const actualDegree = randomDegree % 360;
-                const sliceAngle = 360 / items.length; // Número de fatias
-                const selectedSlice = Math.floor((actualDegree + (sliceAngle / 2)) / sliceAngle);
-                const selectedItem = items[selectedSlice];
-
-                resultDisplay.textContent = `Você ganhou: ${selectedItem}`;
-                historyDisplay.innerHTML += `<div>${selectedItem}</div>`;
-                spinCounts[selectedItem]++; // Incrementa a contagem do item selecionado
-                updateStats(); // Atualiza as estatísticas
-                resetButton.style.display = 'inline-block'; // Mostra o botão de girar novamente
-                spinning = false;
-            }, 4000);
-        });
-
-        resetButton.addEventListener('click', () => {
-            wheel.style.transition = 'none'; // Remove a transição para girar de volta
-            wheel.style.transform = 'rotate(0deg)';
-            resultDisplay.textContent = '';
-            resetButton.style.display = 'none';
-        });
-
-        function updateStats() {
-            statsDisplay.innerHTML = ''; // Limpa as estatísticas
-            for (const item in spinCounts) {
-                statsDisplay.innerHTML += `<div>${item}: ${spinCounts[item]} vez(es)</div>`;
+                const randomIndex = Math.floor(Math.random() * items.length);
+                const selectedItem = items[randomIndex];
+                document.getElementById('result').textContent = `Item sorteado: ${selectedItem}`;
             }
         }
-
-        // Inicializa a roleta
-        updateWheel();
     </script>
 </body>
-
 </html>
