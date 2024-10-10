@@ -4,7 +4,7 @@ const result = document.getElementById("result");
 
 document.getElementById("addItem").addEventListener("click", function() {
     const itemInput = document.getElementById("itemInput");
-    const itemValue = itemInput.value;
+    const itemValue = itemInput.value.trim();
     if (itemValue) {
         items.push(itemValue);
         itemInput.value = '';
@@ -13,27 +13,27 @@ document.getElementById("addItem").addEventListener("click", function() {
 });
 
 document.getElementById("spinButton").addEventListener("click", function() {
-    const randomIndex = Math.floor(Math.random() * items.length);
-    const degrees = randomIndex * (360 / items.length) + 360 * 5; // 5 full spins
-    roulette.style.transform = `rotate(${degrees}deg)`;
-    
-    setTimeout(() => {
-        result.textContent = `Resultado: ${items[randomIndex]}`;
-    }, 4000); // Tempo da animação
+    if (items.length > 0) {
+        const randomIndex = Math.floor(Math.random() * items.length);
+        const degrees = randomIndex * (360 / items.length) + 360 * 5; // 5 spins
+        roulette.style.transform = `rotate(${degrees}deg)`;
+        
+        setTimeout(() => {
+            result.textContent = `Resultado: ${items[randomIndex]}`;
+        }, 4000); // Tempo da animação
+    } else {
+        alert("Adicione pelo menos um item!");
+    }
 });
 
 function drawRoulette() {
-    roulette.innerHTML = '';
+    roulette.innerHTML = ''; // Limpa a roleta
     items.forEach((item, index) => {
         const slice = document.createElement("div");
         slice.textContent = item;
         slice.style.transform = `rotate(${(360 / items.length) * index}deg)`;
-        slice.style.position = "absolute";
-        slice.style.top = "50%";
-        slice.style.left = "50%";
-        slice.style.transformOrigin = "0 100%";
-        slice.style.width = "50%"; // Ajuste a largura do item
-        slice.style.height = "50%"; // Ajuste a altura do item
+        slice.style.backgroundColor = "rgba(0, 0, 0, 0.5)"; // Cor do fundo do item
+        slice.style.color = "white"; // Cor do texto
         roulette.appendChild(slice);
     });
 }
