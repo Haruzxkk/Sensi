@@ -179,7 +179,7 @@
             // Espera o giro terminar e calcula o resultado
             setTimeout(() => {
                 const finalDegree = randomDegree % 360; // Obter o ângulo final
-                const segmentIndex = Math.floor((finalDegree + 15) / (360 / items.length)); // Determinar o segmento correspondente
+                const segmentIndex = Math.floor((finalDegree + (360 / items.length) / 2) / (360 / items.length)); // Determinar o segmento correspondente
                 result.textContent = `Resultado: ${items[segmentIndex]}`; // Exibir o item correspondente
             }, 4000); // 4 segundos
         });
