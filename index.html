@@ -3,203 +3,120 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Roleta Melhorada</title>
+    <title>Gerador de Sensibilidade Free Fire</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            margin: 0;
-            flex-direction: column;
+            overflow: hidden;
+            background: linear-gradient(45deg, #6a11cb, #2575fc);
+            animation: gradient 5s ease infinite;
+        }
+
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
         .container {
-            text-align: center;
-            background-color: #fff;
+            max-width: 400px;
+            background: rgba(255, 255, 255, 0.2);
             border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
             padding: 20px;
-            width: 350px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s;
+            text-align: center;
         }
 
         h1 {
-            font-size: 24px;
             margin-bottom: 20px;
-            color: #333;
+            font-size: 2rem;
+            color: #ffffff;
         }
 
-        .wheel {
-            width: 300px;
-            height: 300px;
-            border-radius: 50%;
-            position: relative;
-            overflow: hidden;
-            transition: transform 4s ease-out;
-            margin: 20px auto;
-            border: 5px solid #333;
-            background-color: #eaeaea;
-        }
-
-        .segment {
-            position: absolute;
-            width: 50%;
-            height: 50%;
-            background-color: #3498db;
-            border: 1px solid #fff; 
-            clip-path: polygon(100% 0, 0% 100%, 100% 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            font-size: 16px;
-            transition: background-color 0.3s;
-        }
-
-        .segment:hover {
-            background-color: #2980b9; 
+        img {
+            max-width: 100%;
+            border-radius: 10px;
+            margin-bottom: 20px;
         }
 
         button {
-            margin-top: 10px;
-            padding: 10px;
-            font-size: 16px;
-            cursor: pointer;
+            width: 100%;
+            padding: 15px;
+            margin-top: 20px;
+            background-color: #6a11cb;
+            color: #fff;
             border: none;
             border-radius: 5px;
-            background-color: #3498db; 
-            color: white;
-            transition: background-color 0.3s;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: background-color 0.3s, transform 0.3s;
         }
 
         button:hover {
-            background-color: #2980b9; 
+            background-color: #2575fc;
+            transform: scale(1.05);
         }
 
-        .result {
+        .resultado {
             margin-top: 20px;
-            font-size: 20px;
-            color: #333;
-        }
-
-        .arrow {
-            position: absolute;
-            top: -30px; 
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 1; 
-            width: 0;
-            height: 0;
-            border-left: 10px solid transparent;
-            border-right: 10px solid transparent;
-            border-bottom: 20px solid #333; 
-        }
-
-        input[type="text"] {
-            width: 100%;
-            padding: 10px;
-            margin-top: 10px;
-            border: 2px solid #ccc;
+            padding: 15px;
             border-radius: 5px;
-            font-size: 16px;
-            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+            background: rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+            font-size: 1.2rem;
+            border: 1px solid #fff;
+            opacity: 0;
+            transition: opacity 0.5s;
         }
 
-        input[type="text"]:focus {
-            border-color: #3498db; 
-            outline: none;
+        .visible {
+            opacity: 1;
         }
+
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Roleta Melhorada</h1>
-        <input type="text" id="itemInput" placeholder="Adicione um item" />
-        <button id="addItemButton">Adicionar Item</button>
-        <div class="wheel" id="wheel">
-            <div class="arrow"></div>
-        </div>
-        <button id="spinButton">Girar!</button>
-        <div class="result" id="result"></div>
+        <img src="https://i.postimg.cc/m2qF8ZVZ/IMG-20241004-185213-751.jpg" alt="Imagem do jogo"> <!-- Substitua "URL_DA_IMAGEM" pelo link da imagem desejada -->
+        <h1>Gerador de Sensibilidade Free Fire</h1>
+        <button type="button" onclick="gerarSensibilidade()">Gerar Sensibilidade Aleatória</button>
+        
+        <div id="resultado" class="resultado"></div>
     </div>
+    
     <script>
-        const wheel = document.getElementById("wheel");
-        const result = document.getElementById("result");
-        const itemInput = document.getElementById("itemInput");
-        const addItemButton = document.getElementById("addItemButton");
+        function gerarSensibilidade() {
+            const dpi = Math.floor(Math.random() * (1001 - 400)) + 400; // Gera DPI entre 400 e 1000
+            const pontoVermelho = Math.floor(Math.random() * 201); // Sensi Ponto Vermelho entre 0 e 200
+            const mira2x = Math.floor(Math.random() * 201); // Sensi Mira 2x entre 0 e 200
+            const mira4x = Math.floor(Math.random() * 201); // Sensi Mira 4x entre 0 e 200
+            const miraAwm = Math.floor(Math.random() * 201); // Sensi Mira AWM entre 0 e 200
 
-        // Recuperar itens do armazenamento local
-        let items = JSON.parse(localStorage.getItem('wheelItems')) || [];
+            const resultado = `
+                <h2>Configurações Geradas:</h2>
+                <p><strong>DPI:</strong> ${dpi}</p>
+                <p><strong>Ponto Vermelho:</strong> ${pontoVermelho}</p>
+                <p><strong>Mira 2x:</strong> ${mira2x}</p>
+                <p><strong>Mira 4x:</strong> ${mira4x}</p>
+                <p><strong>Mira AWM:</strong> ${miraAwm}</p>
+            `;
 
-        // Função para adicionar itens à roleta
-        addItemButton.addEventListener("click", function() {
-            const itemValue = itemInput.value.trim();
-            if (itemValue && !items.includes(itemValue)) {
-                items.push(itemValue);
-                localStorage.setItem('wheelItems', JSON.stringify(items)); // Salvar no armazenamento local
-                drawWheel();
-                itemInput.value = ''; // Limpar o campo de entrada
-            } else {
-                alert("Por favor, insira um item válido e único.");
-            }
-        });
+            const resultadoDiv = document.getElementById('resultado');
+            resultadoDiv.innerHTML = resultado;
+            resultadoDiv.classList.add('visible');
 
-        // Função para desenhar a roleta
-        function drawWheel() {
-            wheel.innerHTML = ''; // Limpar a roleta antes de desenhar
-            const arrow = document.createElement('div');
-            arrow.className = 'arrow';
-            wheel.appendChild(arrow); // Adiciona a seta
-
-            const segmentAngle = 360 / items.length; // Calcular o ângulo de cada segmento
-
-            items.forEach((item, index) => {
-                const segment = document.createElement('div');
-                segment.className = 'segment';
-                segment.style.transform = `rotate(${segmentAngle * index}deg)`;
-                segment.textContent = item;
-
-                // Ajustar a cor do segmento
-                segment.style.backgroundColor = getRandomColor(); 
-
-                wheel.appendChild(segment);
-            });
-        }
-
-        // Função para gerar uma cor aleatória
-        function getRandomColor() {
-            const letters = '0123456789ABCDEF';
-            let color = '#';
-            for (let i = 0; i < 6; i++) {
-                color += letters[Math.floor(Math.random() * 16)];
-            }
-            return color;
-        }
-
-        // Evento para girar a roleta
-        document.getElementById("spinButton").addEventListener("click", function() {
-            if (items.length === 0) {
-                alert("Adicione itens à roleta antes de girar!");
-                return;
-            }
-
-            const randomDegree = Math.floor(Math.random() * 360) + 3600; // Girar 10 vezes + um giro aleatório
-            wheel.style.transform = `rotate(${randomDegree}deg)`;
-
-            // Espera o giro terminar e calcula o resultado
-            setTimeout(() => {
-                const finalDegree = randomDegree % 360; // Obter o ângulo final
-                const segmentIndex = Math.floor((finalDegree + (segmentAngle / 2)) / segmentAngle) % items.length; // Determinar o segmento correspondente
-                result.textContent = `Resultado: ${items[segmentIndex]}`; // Exibir o item correspondente
-            }, 4000); // 4 segundos
-        });
-
-        // Inicializa a roleta com itens do armazenamento local
-        if (items.length > 0) {
-            drawWheel();
+            // Mudar a cor aleatoriamente
+            const randomColor = `#${Math.floor(Math.random()*16777215).toString(16)}`;
+            resultadoDiv.style.color = randomColor;
+            document.querySelector('button').style.backgroundColor = randomColor;
         }
     </script>
 </body>
