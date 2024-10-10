@@ -3,197 +3,137 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Roleta de Sorteio</title>
+    <title>Roleta Simples</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f0f8ff;
-            text-align: center;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
             margin: 0;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-
-        h1 {
-            color: #4a90e2;
+            flex-direction: column;
         }
 
         .container {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #ffffff;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            border-radius: 10px;
+            text-align: center;
         }
 
-        input[type="text"] {
-            padding: 10px;
-            width: calc(100% - 22px);
-            margin: 10px 0;
-            border: 2px solid #4a90e2;
-            border-radius: 5px;
+        .wheel {
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            border: 10px solid #333;
+            position: relative;
+            overflow: hidden;
+            transition: transform 4s ease-out;
+        }
+
+        .segment {
+            width: 50%;
+            height: 50%;
+            background-color: #8e44ad;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform-origin: 0 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
         }
 
         button {
-            margin: 10px;
+            margin-top: 20px;
             padding: 10px 20px;
             font-size: 16px;
             cursor: pointer;
-            border: none;
-            border-radius: 5px;
-            background-color: #4a90e2;
-            color: white;
-            transition: background-color 0.3s ease;
         }
 
-        button:hover {
-            background-color: #357ab8;
-        }
-
-        #rouletteContainer {
-            width: 300px;
-            height: 300px;
-            border: 10px solid #4a90e2;
-            border-radius: 50%;
-            position: relative;
-            overflow: hidden;
-            margin: 20px auto;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-            background-color: white; /* Fundo da roleta branco */
-        }
-
-        #roulette {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            transition: transform 4s cubic-bezier(0.33, 1, 0.68, 1);
-            background: conic-gradient(
-                #ff4747 0%,
-                #ffce47 20%,
-                #4caf50 40%,
-                #47a3ff 60%,
-                #7c4dff 80%,
-                #ff4747 100%
-            );
+        .result {
+            margin-top: 20px;
+            font-size: 24px;
         }
 
         .arrow {
-            position: absolute;
-            top: -15px;
-            left: 50%;
-            transform: translateX(-50%);
             width: 0;
             height: 0;
             border-left: 10px solid transparent;
             border-right: 10px solid transparent;
-            border-bottom: 15px solid #4a90e2;
-            z-index: 1;
-        }
-
-        #result {
-            font-size: 24px;
-            margin-top: 20px;
-            color: #4a90e2;
-        }
-
-        #itemList {
-            margin: 20px 0;
-            padding: 10px;
-            background-color: #e3f2fd;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            max-height: 150px;
-            overflow-y: auto;
-        }
-
-        .item {
-            padding: 5px;
-            border-bottom: 1px solid #4a90e2;
-        }
-
-        .item:last-child {
-            border-bottom: none;
+            border-bottom: 20px solid #333;
+            position: absolute;
+            top: -30px; /* Ajuste a posição vertical da seta */
+            left: 50%;
+            transform: translateX(-50%);
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Roleta de Sorteio</h1>
-        <input type="text" id="itemInput" placeholder="Adicione um item">
-        <button id="addItem">Adicionar Item</button>
-
-        <div id="itemList"></div> <!-- Área para listar itens adicionados -->
-
-        <div id="rouletteContainer">
-            <div id="roulette"></div>
-            <div class="arrow"></div> <!-- Seta para indicar o resultado -->
+        <h1>Roleta Simples</h1>
+        <input type="text" id="itemInput" placeholder="Adicione um item" />
+        <button id="addItemButton">Adicionar Item</button>
+        <div class="wheel" id="wheel">
+            <div class="arrow"></div> <!-- Seta adicionada aqui -->
         </div>
-
-        <button id="spinButton">Girar a Roleta</button>
-        <h2 id="result"></h2>
+        <button id="spinButton">Girar!</button>
+        <div class="result" id="result"></div>
     </div>
     <script>
-        const items = [];
-        const roulette = document.getElementById("roulette");
+        const wheel = document.getElementById("wheel");
         const result = document.getElementById("result");
-        const itemList = document.getElementById("itemList");
+        const itemInput = document.getElementById("itemInput");
+        const addItemButton = document.getElementById("addItemButton");
 
-        document.getElementById("addItem").addEventListener("click", function() {
-            const itemInput = document.getElementById("itemInput");
+        let items = [];
+
+        addItemButton.addEventListener("click", function() {
             const itemValue = itemInput.value.trim();
-            if (itemValue) {
+            if (itemValue && !items.includes(itemValue)) {
                 items.push(itemValue);
-                itemInput.value = '';
-                drawRoulette();
-                updateItemList();
+                drawWheel();
+                itemInput.value = ''; // Limpar o campo de entrada
+            } else {
+                alert("Por favor, insira um item válido e único.");
             }
         });
+
+        function drawWheel() {
+            wheel.innerHTML = ''; // Limpar a roleta antes de desenhar
+            const segmentAngle = 360 / items.length; // Calcular o ângulo de cada segmento
+
+            // Adicionar a seta de novo
+            const arrow = document.createElement('div');
+            arrow.className = 'arrow';
+            wheel.appendChild(arrow);
+            
+            items.forEach((item, index) => {
+                const segment = document.createElement('div');
+                segment.className = 'segment';
+                segment.style.transform = `rotate(${segmentAngle * index}deg)`;
+                segment.textContent = item;
+                wheel.appendChild(segment);
+            });
+        }
 
         document.getElementById("spinButton").addEventListener("click", function() {
-            if (items.length > 0) {
-                // Adiciona uma rotação aleatória ao resultado
-                const randomIndex = Math.floor(Math.random() * items.length);
-                const degrees = randomIndex * (360 / items.length) + 360 * 5; // 5 spins
-                roulette.style.transform = `rotate(${degrees}deg)`;
-
-                setTimeout(() => {
-                    result.textContent = `Resultado: ${items[randomIndex]}`;
-                }, 4000); // Tempo da animação
-            } else {
-                alert("Adicione pelo menos um item!");
+            if (items.length === 0) {
+                alert("Adicione itens à roleta antes de girar!");
+                return;
             }
+
+            const randomDegree = Math.floor(Math.random() * 360) + 3600; // Girar 10 vezes + um giro aleatório
+            wheel.style.transform = `rotate(${randomDegree}deg)`;
+
+            // Espera o giro terminar e calcula o resultado
+            setTimeout(() => {
+                const finalDegree = randomDegree % 360; // Obter o ângulo final
+                const segmentIndex = Math.floor(finalDegree / (360 / items.length)); // Determinar o segmento correspondente
+                result.textContent = `Resultado: ${items[segmentIndex]}`; // Exibir o item correspondente
+            }, 4000); // 4 segundos
         });
-
-        function drawRoulette() {
-            roulette.innerHTML = ''; // Limpa a roleta
-            const totalItems = items.length;
-            const anglePerItem = 360 / Math.max(totalItems, 2); // Garante que pelo menos 2 itens são mostrados
-
-            items.forEach((item, index) => {
-                const slice = document.createElement("div");
-                slice.textContent = item;
-                slice.style.transform = `rotate(${anglePerItem * index}deg)`;
-                slice.style.color = "black"; // Cor do texto
-                slice.style.transformOrigin = "0% 100%"; // Alinha a roleta
-                slice.style.position = "absolute"; // Para que os itens apareçam dentro da roleta
-                slice.style.width = "50%"; // Cada item ocupará metade da roleta
-                slice.style.left = "50%"; // Alinha no centro
-                slice.style.textAlign = "right"; // Alinha o texto à direita
-                roulette.appendChild(slice);
-            });
-        }
-
-        function updateItemList() {
-            itemList.innerHTML = ''; // Limpa a lista de itens
-            items.forEach(item => {
-                const itemElement = document.createElement("div");
-                itemElement.className = "item";
-                itemElement.textContent = item;
-                itemList.appendChild(itemElement);
-            });
-        }
     </script>
 </body>
 </html>
