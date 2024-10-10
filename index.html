@@ -40,13 +40,12 @@
             overflow: hidden;
             transition: transform 4s ease-out;
             margin-bottom: 20px;
-            background-color: #f8f8f8; /* Cor de fundo da roleta */
+            background-color: #f8f8f8;
         }
 
         .segment {
             width: 50%;
             height: 50%;
-            background-color: #8e44ad;
             position: absolute;
             top: 50%;
             left: 50%;
@@ -89,7 +88,7 @@
             border-right: 10px solid transparent;
             border-bottom: 20px solid #333; /* Cor da seta */
             position: absolute;
-            top: -30px; /* Ajuste a posição vertical da seta */
+            top: -20px; /* Ajuste a posição vertical da seta */
             left: 50%;
             transform: translateX(-50%);
             z-index: 1; /* Seta acima da roleta */
@@ -117,7 +116,7 @@
         <input type="text" id="itemInput" placeholder="Adicione um item" />
         <button id="addItemButton">Adicionar Item</button>
         <div class="wheel" id="wheel">
-            <div class="arrow"></div> <!-- Seta adicionada aqui -->
+            <div class="arrow"></div> <!-- Seta centralizada -->
         </div>
         <button id="spinButton">Girar!</button>
         <div class="result" id="result"></div>
@@ -153,9 +152,19 @@
                 const segment = document.createElement('div');
                 segment.className = 'segment';
                 segment.style.transform = `rotate(${segmentAngle * index}deg)`;
+                segment.style.backgroundColor = getRandomColor(); // Cor aleatória para cada segmento
                 segment.textContent = item;
                 wheel.appendChild(segment);
             });
+        }
+
+        function getRandomColor() {
+            const letters = '0123456789ABCDEF';
+            let color = '#';
+            for (let i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
         }
 
         document.getElementById("spinButton").addEventListener("click", function() {
@@ -170,7 +179,7 @@
             // Espera o giro terminar e calcula o resultado
             setTimeout(() => {
                 const finalDegree = randomDegree % 360; // Obter o ângulo final
-                const segmentIndex = Math.floor(finalDegree / (360 / items.length)); // Determinar o segmento correspondente
+                const segmentIndex = Math.floor((finalDegree + 15) / (360 / items.length)); // Determinar o segmento correspondente
                 result.textContent = `Resultado: ${items[segmentIndex]}`; // Exibir o item correspondente
             }, 4000); // 4 segundos
         });
