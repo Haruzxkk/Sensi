@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Roleta Simples</title>
+    <title>Roleta Melhorada</title>
     <style>
         body {
-            font-family: 'Arial', sans-serif;
-            background-color: #eaeaea;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -22,7 +22,7 @@
             border-radius: 10px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
             padding: 20px;
-            width: 320px;
+            width: 350px;
         }
 
         h1 {
@@ -35,28 +35,32 @@
             width: 300px;
             height: 300px;
             border-radius: 50%;
-            border: 10px solid #333;
             position: relative;
             overflow: hidden;
             transition: transform 4s ease-out;
-            margin-bottom: 20px;
-            background-color: #f8f8f8;
+            margin: 20px auto;
+            border: 5px solid #333;
+            background-color: #eaeaea;
         }
 
         .segment {
+            position: absolute;
             width: 50%;
             height: 50%;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform-origin: 0 0;
+            background-color: #3498db;
+            border: 1px solid #fff; 
+            clip-path: polygon(100% 0, 0% 100%, 100% 100%);
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
             font-weight: bold;
             font-size: 16px;
-            border: 1px solid #fff; /* Borda branca para cada segmento */
+            transition: background-color 0.3s;
+        }
+
+        .segment:hover {
+            background-color: #2980b9; 
         }
 
         button {
@@ -66,13 +70,13 @@
             cursor: pointer;
             border: none;
             border-radius: 5px;
-            background-color: #3498db; /* Cor do botão */
+            background-color: #3498db; 
             color: white;
             transition: background-color 0.3s;
         }
 
         button:hover {
-            background-color: #2980b9; /* Cor ao passar o mouse */
+            background-color: #2980b9; 
         }
 
         .result {
@@ -82,16 +86,16 @@
         }
 
         .arrow {
+            position: absolute;
+            top: -30px; 
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1; 
             width: 0;
             height: 0;
             border-left: 10px solid transparent;
             border-right: 10px solid transparent;
-            border-bottom: 20px solid #333; /* Cor da seta */
-            position: absolute;
-            top: -20px; /* Ajuste a posição vertical da seta */
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 1; /* Seta acima da roleta */
+            border-bottom: 20px solid #333; 
         }
 
         input[type="text"] {
@@ -105,18 +109,18 @@
         }
 
         input[type="text"]:focus {
-            border-color: #3498db; /* Cor da borda ao focar */
+            border-color: #3498db; 
             outline: none;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Roleta Simples</h1>
+        <h1>Roleta Melhorada</h1>
         <input type="text" id="itemInput" placeholder="Adicione um item" />
         <button id="addItemButton">Adicionar Item</button>
         <div class="wheel" id="wheel">
-            <div class="arrow"></div> <!-- Seta centralizada -->
+            <div class="arrow"></div>
         </div>
         <button id="spinButton">Girar!</button>
         <div class="result" id="result"></div>
@@ -127,12 +131,15 @@
         const itemInput = document.getElementById("itemInput");
         const addItemButton = document.getElementById("addItemButton");
 
-        let items = [];
+        // Recuperar itens do armazenamento local
+        let items = JSON.parse(localStorage.getItem('wheelItems')) || [];
 
+        // Função para adicionar itens à roleta
         addItemButton.addEventListener("click", function() {
             const itemValue = itemInput.value.trim();
             if (itemValue && !items.includes(itemValue)) {
                 items.push(itemValue);
+                localStorage.setItem('wheelItems', JSON.stringify(items)); // Salvar no armazenamento local
                 drawWheel();
                 itemInput.value = ''; // Limpar o campo de entrada
             } else {
@@ -140,6 +147,7 @@
             }
         });
 
+        // Função para desenhar a roleta
         function drawWheel() {
             wheel.innerHTML = ''; // Limpar a roleta antes de desenhar
             const arrow = document.createElement('div');
@@ -152,12 +160,16 @@
                 const segment = document.createElement('div');
                 segment.className = 'segment';
                 segment.style.transform = `rotate(${segmentAngle * index}deg)`;
-                segment.style.backgroundColor = getRandomColor(); // Cor aleatória para cada segmento
                 segment.textContent = item;
+
+                // Ajustar a cor do segmento
+                segment.style.backgroundColor = getRandomColor(); 
+
                 wheel.appendChild(segment);
             });
         }
 
+        // Função para gerar uma cor aleatória
         function getRandomColor() {
             const letters = '0123456789ABCDEF';
             let color = '#';
@@ -167,6 +179,7 @@
             return color;
         }
 
+        // Evento para girar a roleta
         document.getElementById("spinButton").addEventListener("click", function() {
             if (items.length === 0) {
                 alert("Adicione itens à roleta antes de girar!");
@@ -179,10 +192,15 @@
             // Espera o giro terminar e calcula o resultado
             setTimeout(() => {
                 const finalDegree = randomDegree % 360; // Obter o ângulo final
-                const segmentIndex = Math.floor((finalDegree + (360 / items.length) / 2) / (360 / items.length)); // Determinar o segmento correspondente
+                const segmentIndex = Math.floor((finalDegree + (segmentAngle / 2)) / segmentAngle) % items.length; // Determinar o segmento correspondente
                 result.textContent = `Resultado: ${items[segmentIndex]}`; // Exibir o item correspondente
             }, 4000); // 4 segundos
         });
+
+        // Inicializa a roleta com itens do armazenamento local
+        if (items.length > 0) {
+            drawWheel();
+        }
     </script>
 </body>
 </html>
