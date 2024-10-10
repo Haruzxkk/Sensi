@@ -6,8 +6,8 @@
     <title>Roleta Simples</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            font-family: 'Arial', sans-serif;
+            background-color: #eaeaea;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -18,6 +18,17 @@
 
         .container {
             text-align: center;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            width: 320px;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #333;
         }
 
         .wheel {
@@ -28,6 +39,8 @@
             position: relative;
             overflow: hidden;
             transition: transform 4s ease-out;
+            margin-bottom: 20px;
+            background-color: #f8f8f8; /* Cor de fundo da roleta */
         }
 
         .segment {
@@ -43,18 +56,30 @@
             justify-content: center;
             color: white;
             font-weight: bold;
+            font-size: 16px;
+            border: 1px solid #fff; /* Borda branca para cada segmento */
         }
 
         button {
-            margin-top: 20px;
-            padding: 10px 20px;
+            margin-top: 10px;
+            padding: 10px;
             font-size: 16px;
             cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background-color: #3498db; /* Cor do botão */
+            color: white;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #2980b9; /* Cor ao passar o mouse */
         }
 
         .result {
             margin-top: 20px;
-            font-size: 24px;
+            font-size: 20px;
+            color: #333;
         }
 
         .arrow {
@@ -62,11 +87,27 @@
             height: 0;
             border-left: 10px solid transparent;
             border-right: 10px solid transparent;
-            border-bottom: 20px solid #333;
+            border-bottom: 20px solid #333; /* Cor da seta */
             position: absolute;
             top: -30px; /* Ajuste a posição vertical da seta */
             left: 50%;
             transform: translateX(-50%);
+            z-index: 1; /* Seta acima da roleta */
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        input[type="text"]:focus {
+            border-color: #3498db; /* Cor da borda ao focar */
+            outline: none;
         }
     </style>
 </head>
@@ -102,13 +143,12 @@
 
         function drawWheel() {
             wheel.innerHTML = ''; // Limpar a roleta antes de desenhar
-            const segmentAngle = 360 / items.length; // Calcular o ângulo de cada segmento
-
-            // Adicionar a seta de novo
             const arrow = document.createElement('div');
             arrow.className = 'arrow';
-            wheel.appendChild(arrow);
-            
+            wheel.appendChild(arrow); // Adiciona a seta
+
+            const segmentAngle = 360 / items.length; // Calcular o ângulo de cada segmento
+
             items.forEach((item, index) => {
                 const segment = document.createElement('div');
                 segment.className = 'segment';
