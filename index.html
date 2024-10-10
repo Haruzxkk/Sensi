@@ -1,105 +1,22 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Roleta</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Roleta de Sorteio</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container">
-        <h1>Roleta de Itens</h1>
-
-        <div class="add-item">
-            <input type="text" id="item-input" placeholder="Adicionar item">
-            <button onclick="addItem()">Adicionar</button>
+    <div id="app">
+        <h1>Roleta de Sorteio</h1>
+        <input type="text" id="itemInput" placeholder="Adicione um item">
+        <button id="addItem">Adicionar Item</button>
+        <div id="rouletteContainer">
+            <div id="roulette"></div>
         </div>
-
-        <ul id="item-list">
-            <!-- Lista de itens será inserida aqui -->
-        </ul>
-
-        <div class="roulette-container">
-            <div class="roulette" id="roulette">
-                <!-- Itens da roleta serão inseridos aqui -->
-            </div>
-        </div>
-
-        <button class="spin-btn" onclick="spinRoulette()">Girar</button>
-
+        <button id="spinButton">Girar a Roleta</button>
         <h2 id="result"></h2>
     </div>
-
-    <script>
-        let items = [];
-
-        function addItem() {
-            const itemInput = document.getElementById('item-input');
-            const item = itemInput.value.trim();
-
-            if (item !== '') {
-                items.push(item);
-                updateItemList();
-                itemInput.value = ''; // Limpa o campo de texto
-                updateRoulette();
-            }
-        }
-
-        function removeItem(index) {
-            items.splice(index, 1); // Remove o item da lista
-            updateItemList();
-            updateRoulette();
-        }
-
-        function updateItemList() {
-            const itemList = document.getElementById('item-list');
-            itemList.innerHTML = ''; // Limpa a lista antes de atualizar
-
-            items.forEach((item, index) => {
-                const listItem = document.createElement('li');
-                listItem.textContent = item;
-
-                const removeButton = document.createElement('button');
-                removeButton.textContent = 'Remover';
-                removeButton.onclick = function() {
-                    removeItem(index);
-                };
-
-                listItem.appendChild(removeButton);
-                itemList.appendChild(listItem);
-            });
-        }
-
-        function updateRoulette() {
-            const roulette = document.getElementById('roulette');
-            roulette.innerHTML = ''; // Limpa a roleta antes de atualizar
-
-            items.forEach(item => {
-                const div = document.createElement('div');
-                div.classList.add('roulette-item');
-                div.textContent = item;
-                roulette.appendChild(div);
-            });
-        }
-
-        function spinRoulette() {
-            if (items.length === 0) {
-                document.getElementById('result').textContent = 'Nenhum item na roleta!';
-                return;
-            }
-
-            const roulette = document.getElementById('roulette');
-            let rotations = Math.floor(Math.random() * 5000) + 5000; // Gira entre 5000 e 10000 graus
-            roulette.style.transition = 'transform 5s ease-out';
-            roulette.style.transform = `rotate(${rotations}deg)`;
-
-            // Calcula o item selecionado
-            setTimeout(() => {
-                const randomIndex = Math.floor(Math.random() * items.length);
-                const selectedItem = items[randomIndex];
-                document.getElementById('result').textContent = `Item sorteado: ${selectedItem}`;
-            }, 5000); // Espera o giro acabar para exibir o resultado
-        }
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
