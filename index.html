@@ -4,19 +4,174 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Roleta de Sorteio</title>
-    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            color: #4a90e2;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #ffffff;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            width: calc(100% - 22px);
+            margin: 10px 0;
+            border: 2px solid #4a90e2;
+            border-radius: 5px;
+        }
+
+        button {
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background-color: #4a90e2;
+            color: white;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #357ab8;
+        }
+
+        #rouletteContainer {
+            width: 300px;
+            height: 300px;
+            border: 10px solid #4a90e2;
+            border-radius: 50%;
+            position: relative;
+            overflow: hidden;
+            margin: 20px auto;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        #roulette {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            transition: transform 4s cubic-bezier(0.33, 1, 0.68, 1);
+            background: conic-gradient(
+                #ff4747 0%,
+                #ffce47 20%,
+                #4caf50 40%,
+                #47a3ff 60%,
+                #7c4dff 80%,
+                #ff4747 100%
+            );
+        }
+
+        #result {
+            font-size: 24px;
+            margin-top: 20px;
+            color: #4a90e2;
+        }
+
+        #itemList {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #e3f2fd;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            max-height: 150px;
+            overflow-y: auto;
+        }
+
+        .item {
+            padding: 5px;
+            border-bottom: 1px solid #4a90e2;
+        }
+
+        .item:last-child {
+            border-bottom: none;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
         <h1>Roleta de Sorteio</h1>
         <input type="text" id="itemInput" placeholder="Adicione um item">
         <button id="addItem">Adicionar Item</button>
+
+        <div id="itemList"></div> <!-- Área para listar itens adicionados -->
+
         <div id="rouletteContainer">
             <div id="roulette"></div>
         </div>
+
         <button id="spinButton">Girar a Roleta</button>
         <h2 id="result"></h2>
     </div>
-    <script src="script.js"></script>
+    <script>
+        const items = [];
+        const roulette = document.getElementById("roulette");
+        const result = document.getElementById("result");
+        const itemList = document.getElementById("itemList");
+
+        document.getElementById("addItem").addEventListener("click", function() {
+            const itemInput = document.getElementById("itemInput");
+            const itemValue = itemInput.value.trim();
+            if (itemValue) {
+                items.push(itemValue);
+                itemInput.value = '';
+                drawRoulette();
+                updateItemList();
+            }
+        });
+
+        document.getElementById("spinButton").addEventListener("click", function() {
+            if (items.length > 0) {
+                const randomIndex = Math.floor(Math.random() * items.length);
+                const degrees = randomIndex * (360 / items.length) + 360 * 5; // 5 spins
+                roulette.style.transform = `rotate(${degrees}deg)`;
+                
+                setTimeout(() => {
+                    result.textContent = `Resultado: ${items[randomIndex]}`;
+                }, 4000); // Tempo da animação
+            } else {
+                alert("Adicione pelo menos um item!");
+            }
+        });
+
+        function drawRoulette() {
+            roulette.innerHTML = ''; // Limpa a roleta
+            items.forEach((item, index) => {
+                const slice = document.createElement("div");
+                slice.textContent = item;
+                slice.style.transform = `rotate(${(360 / items.length) * index}deg)`;
+                slice.style.color = "white"; // Cor do texto
+                slice.style.transformOrigin = "0% 100%"; // Alinha a roleta
+                slice.classList.add('item');
+                roulette.appendChild(slice);
+            });
+        }
+
+        function updateItemList() {
+            itemList.innerHTML = ''; // Limpa a lista de itens
+            items.forEach(item => {
+                const itemElement = document.createElement("div");
+                itemElement.className = "item";
+                itemElement.textContent = item;
+                itemList.appendChild(itemElement);
+            });
+        }
+    </script>
 </body>
 </html>
