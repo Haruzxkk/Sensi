@@ -60,6 +60,7 @@
             overflow: hidden;
             margin: 20px auto;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            background-color: white; /* Fundo da roleta branco */
         }
 
         #roulette {
@@ -76,6 +77,19 @@
                 #7c4dff 80%,
                 #ff4747 100%
             );
+        }
+
+        .arrow {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-bottom: 15px solid #4a90e2;
+            z-index: 1;
         }
 
         #result {
@@ -114,6 +128,7 @@
 
         <div id="rouletteContainer">
             <div id="roulette"></div>
+            <div class="arrow"></div> <!-- Seta para indicar o resultado -->
         </div>
 
         <button id="spinButton">Girar a Roleta</button>
@@ -138,10 +153,11 @@
 
         document.getElementById("spinButton").addEventListener("click", function() {
             if (items.length > 0) {
+                // Adiciona uma rotação aleatória ao resultado
                 const randomIndex = Math.floor(Math.random() * items.length);
                 const degrees = randomIndex * (360 / items.length) + 360 * 5; // 5 spins
                 roulette.style.transform = `rotate(${degrees}deg)`;
-                
+
                 setTimeout(() => {
                     result.textContent = `Resultado: ${items[randomIndex]}`;
                 }, 4000); // Tempo da animação
@@ -152,13 +168,19 @@
 
         function drawRoulette() {
             roulette.innerHTML = ''; // Limpa a roleta
+            const totalItems = items.length;
+            const anglePerItem = 360 / Math.max(totalItems, 2); // Garante que pelo menos 2 itens são mostrados
+
             items.forEach((item, index) => {
                 const slice = document.createElement("div");
                 slice.textContent = item;
-                slice.style.transform = `rotate(${(360 / items.length) * index}deg)`;
-                slice.style.color = "white"; // Cor do texto
+                slice.style.transform = `rotate(${anglePerItem * index}deg)`;
+                slice.style.color = "black"; // Cor do texto
                 slice.style.transformOrigin = "0% 100%"; // Alinha a roleta
-                slice.classList.add('item');
+                slice.style.position = "absolute"; // Para que os itens apareçam dentro da roleta
+                slice.style.width = "50%"; // Cada item ocupará metade da roleta
+                slice.style.left = "50%"; // Alinha no centro
+                slice.style.textAlign = "right"; // Alinha o texto à direita
                 roulette.appendChild(slice);
             });
         }
